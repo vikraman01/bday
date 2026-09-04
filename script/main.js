@@ -1,27 +1,50 @@
-// Import the data to customize and insert them into page
+// Import the data to customize and insert it into the page.
 const fetchData = () => {
   fetch("customize.json")
-    .then(data => data.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Unable to load customization data: ${response.status}`);
+      }
+
+      return response.json();
+    })
     .then(data => {
-      dataArr = Object.keys(data);
-      dataArr.map(customData => {
-        if (data[customData] !== "") {
-          if (customData === "imagePath") {
-            document
-              .querySelector(`[data-node-name*="${customData}"]`)
-              .setAttribute("src", data[customData]);
-          } else {
-            document.querySelector(`[data-node-name*="${customData}"]`).innerText = data[customData];
-          }
+      Object.entries(data).forEach(([nodeName, value]) => {
+        if (value === "") {
+          return;
         }
 
-        // Check if the iteration is over
-        // Run amimation if so
-        if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
-          animationTimeline();
-        } 
+        const node = Array.from(document.querySelectorAll("[data-node-name]")).find(
+          element => element.dataset.nodeName === nodeName
+        );
+        if (!node) {
+          return;
+        }
+
+        if (nodeName === "imagePath") {
+          node.setAttribute("src", value);
+        } else {
+          node.textContent = value;
+        }
       });
-    });
+    })
+    .catch(error => {
+      console.warn("Using the page's default birthday message.", error);
+    })
+    .then(animationTimeline);
+};
+
+const wrapCharacters = element => {
+  const characters = Array.from(element.textContent);
+  const fragment = document.createDocumentFragment();
+
+  characters.forEach(character => {
+    const characterSpan = document.createElement("span");
+    characterSpan.textContent = character;
+    fragment.appendChild(characterSpan);
+  });
+
+  element.replaceChildren(fragment);
 };
 
 // Animation Timeline
@@ -30,13 +53,8 @@ const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
 
-  textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
-    .split("")
-    .join("</span><span>")}</span`;
-
-  hbd.innerHTML = `<span>${hbd.innerHTML
-    .split("")
-    .join("</span><span>")}</span`;
+  wrapCharacters(textBoxChars);
+  wrapCharacters(hbd);
 
   const ideaTextTrans = {
     opacity: 0,
