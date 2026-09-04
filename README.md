@@ -31,3 +31,18 @@ I've used plain HTML, CSS and JavaScript with [GSAP](https://greensock.com/gsap)
 If you have any idea to improve it or make it more interesting, feel free to send a PR, or create an issue for a feature request.
 
 Happy wishing! 🎉
+
+### Deploy to Cloudflare Workers
+
+The project includes a Cloudflare Workers configuration that serves the static page
+with [Workers Assets](https://developers.cloudflare.com/workers/static-assets/).
+Install dependencies, authenticate with Cloudflare, then deploy:
+
+```sh
+npm install
+npm run deploy
+```
+
+For local Workers development, run `npm run dev`. Deployment builds `dist/` from
+the page, customization file, styles, scripts, and images; the generated directory
+is intentionally not committed.

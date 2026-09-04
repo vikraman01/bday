@@ -2,68 +2,84 @@ html {
   box-sizing: border-box;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
   font-family: "Work Sans", sans-serif;
 }
 
 .container {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
   height: 100vh;
-  width: 100vh;
+  height: 100dvh;
   margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+  overflow: hidden;
   text-align: center;
   visibility: hidden;
-  position: relative;
-  overflow: hidden;
 }
 
 .container div.six {
-  top: 10vh;
+  top: clamp(3rem, 10dvh, 8rem);
   z-index: 1;
 }
 
 .container div.seven,
 .container div.eight {
-  width: 100vw;
-  height: 100vh;
   position: fixed;
   top: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
 }
 
 .container > div {
   position: absolute;
-  left: 0;
+  top: clamp(5rem, 20dvh, 12rem);
   right: 0;
-  top: 20vh;
+  left: 0;
 }
 
 .one {
-  font-size: 4.5rem;
+  font-size: clamp(2.4rem, 8vw, 4.5rem);
+  overflow-wrap: anywhere;
 }
 
 .one > img {
-  vertical-align: middle;
-  margin-bottom: 10px;
   max-width: 100%;
   height: auto;
+  margin-bottom: 10px;
+  vertical-align: middle;
 }
 
 .two {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3.5vw, 1.2rem);
   font-weight: lighter;
 }
 
 .three {
-  font-size: 3rem;
+  font-size: clamp(1.75rem, 6vw, 3rem);
+  overflow-wrap: anywhere;
 }
 
 .four .text-box {
-  width: 600px;
+  position: relative;
+  width: min(600px, 100%);
   margin: 0 auto;
+  padding: 10px;
   border: 3px solid #aaa;
   border-radius: 5px;
-  padding: 10px;
-  position: relative;
 }
 
 .text-box p {
@@ -75,31 +91,37 @@ body {
   visibility: hidden;
 }
 
+.hbd-chatbox {
+  padding-right: 3.5rem;
+  overflow-wrap: anywhere;
+}
+
 .text-box .fake-btn {
   position: absolute;
   right: 5px;
   bottom: 5px;
-  color: #fff;
-  background-color: rgb(21, 161, 237);
   padding: 5px 8px;
+  color: #fff;
   border-radius: 3px;
+  background-color: rgb(21, 161, 237);
 }
 
 .five p {
-  font-size: 2rem;
   position: absolute;
-  left: 0;
   right: 0;
+  left: 0;
+  font-size: clamp(1.35rem, 5vw, 2rem);
 }
 
 .idea-3 strong {
+  display: inline-block;
   padding: 3px 5px;
   border-radius: 3px;
-  display: inline-block;
 }
 
 .five .idea-5 {
-  font-size: 4rem;
+  font-size: clamp(2.25rem, 10vw, 4rem);
+  overflow-wrap: anywhere;
 }
 
 .idea-5 span,
@@ -109,7 +131,7 @@ body {
 }
 
 .idea-6 span {
-  font-size: 15rem;
+  font-size: clamp(5rem, 28vw, 15rem);
 }
 
 .six {
@@ -122,109 +144,63 @@ body {
   height: auto;
 }
 
+.six .lydia-dp {
+  width: min(300px, 70vw);
+}
+
 .six .hat {
   position: absolute;
-  width: 80px;
   top: -35px;
-  left: 41.5%;
-  /* transform: scale(0.1); */
+  left: calc(50% - 45px);
+  width: 80px;
 }
 
 .baloons img {
-  display: inline-block;
   position: absolute;
+  display: inline-block;
 }
 
-.baloons img:nth-child(even) {
-  left: -10%;
-}
-
-.baloons img:nth-child(odd) {
-  right: -10%;
-}
-
-.baloons img:nth-child(3n + 0) {
-  left: 30%;
-}
+.baloons img:nth-child(even) { left: -10%; }
+.baloons img:nth-child(odd) { right: -10%; }
+.baloons img:nth-child(3n) { left: 30%; }
 
 .eight svg {
-  width: 25px;
   position: absolute;
   top: 0;
   left: 0;
-  visibility: hidden;
   z-index: -1;
+  width: 25px;
+  visibility: hidden;
 }
 
-.eight svg:nth-child(1) {
-  top: 7vh;
-  left: 5vw;
-  fill: #bd6ecf;
-}
-
-.eight svg:nth-child(2) {
-  top: 23vh;
-  left: 35vw;
-  fill: #7dd175;
-}
-
-.eight svg:nth-child(3) {
-  top: 33vh;
-  left: 23vw;
-  fill: #349d8b;
-}
-
-.eight svg:nth-child(4) {
-  top: 43vh;
-  left: 57vw;
-  fill: #347a9d;
-}
-
-.eight svg:nth-child(5) {
-  top: 68vh;
-  left: 7vw;
-  fill: #c66053;
-}
-
-.eight svg:nth-child(6) {
-  top: 42vh;
-  left: 77vw;
-  fill: #bfaa40;
-}
-
-.eight svg:nth-child(7) {
-  top: 68vh;
-  left: 83vw;
-  fill: #e3bae8;
-}
-
-.eight svg:nth-child(8) {
-  top: 86vh;
-  left: 37vw;
-  fill: #8762cb;
-}
-
-.eight svg:nth-child(9) {
-  top: 94vh;
-  left: 87vw;
-  fill: #9a90da;
-}
+.eight svg:nth-child(1) { top: 7vh; left: 5vw; fill: #bd6ecf; }
+.eight svg:nth-child(2) { top: 23vh; left: 35vw; fill: #7dd175; }
+.eight svg:nth-child(3) { top: 33vh; left: 23vw; fill: #349d8b; }
+.eight svg:nth-child(4) { top: 43vh; left: 57vw; fill: #347a9d; }
+.eight svg:nth-child(5) { top: 68vh; left: 7vw; fill: #c66053; }
+.eight svg:nth-child(6) { top: 42vh; left: 77vw; fill: #bfaa40; }
+.eight svg:nth-child(7) { top: 68vh; left: 83vw; fill: #e3bae8; }
+.eight svg:nth-child(8) { top: 86vh; left: 37vw; fill: #8762cb; }
+.eight svg:nth-child(9) { top: 94vh; left: 87vw; fill: #9a90da; }
 
 .wish-hbd {
-  font-size: 3em;
   margin: 0;
+  font-size: clamp(1.75rem, 7vw, 3em);
   text-transform: uppercase;
 }
 
 .wish h5 {
-  font-weight: lighter;
-  font-size: 2rem;
   margin: 10px 0 0;
+  font-size: clamp(1rem, 4.5vw, 2rem);
+  font-weight: lighter;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .nine p {
-  font-size: 2rem;
+  font-size: clamp(1.2rem, 5vw, 2rem);
   font-weight: lighter;
+  overflow-wrap: anywhere;
 }
 
 #replay {
@@ -232,68 +208,14 @@ body {
   cursor: pointer;
 }
 
-/* Media Queries */
-@media screen and (max-height: 1000px) {
-  .six .hat {
-    left: 40%;
-  }
-}
-
-@media screen and (max-height: 800px) {
-  .six .hat {
-    left: 37%;
-  }
-}
-
-@media screen and (max-height: 700px) {
-  .six .hat {
-    left: 32%;
-  }
-}
-
-@media screen and (max-height: 850px) and (max-width: 450px) {
-  .six .hat {
-    left: 32%;
-  }
-}
-
 @media screen and (max-width: 500px) {
-  .container {
-    width: 90%;
-  }
+  .container { padding-inline: 1rem; }
+  .text-box .fake-btn { bottom: -38px; }
+  .idea-5 span { display: block; }
+  .six .hat { top: -20px; left: calc(50% - 29px); width: 50px; }
+}
 
-  .four .text-box {
-    width: 90%;
-  }
-
-  .text-box .fake-btn {
-    right: 5px;
-    bottom: -38px;
-  }
-
-  .idea-5 span {
-    display: block;
-  }
-
-  .idea-6 span {
-    font-size: 10rem;
-  }
-
-  .six .hat {
-    width: 50px;
-    top: -20px;
-  }
-
-  .wish-hbd {
-    font-size: 2.2em;
-  }
-
-  .wish h5 {
-    font-size: 1.4rem;
-  }
-
-  .nine p {
-    font-size: 1.5rem;
-    font-weight: lighter;
-  }
+@media screen and (max-height: 600px) {
+  .container > div { top: 3rem; }
+  .container div.six { top: 1.5rem; }
 }
