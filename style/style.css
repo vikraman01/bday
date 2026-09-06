@@ -135,8 +135,6 @@ body {
 }
 
 .six {
-  /* Lower this value to move the hat up on every screen size. */
-  --hat-top: -180px;
   position: relative;
 }
 
@@ -150,11 +148,18 @@ body {
   width: min(300px, 70vw);
 }
 
+.six .portrait {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
 .six .hat {
   position: absolute;
-  top: var(--hat-top);
-  left: calc(50% - 45px);
-  width: 80px;
+  /* Anchor to the portrait so the hat scales and moves with it at every viewport. */
+  top: -12%;
+  left: 35%;
+  width: 27%;
 }
 
 .baloons img {
@@ -214,12 +219,6 @@ body {
   .container { padding-inline: 1rem; }
   .text-box .fake-btn { bottom: -38px; }
   .idea-5 span { display: block; }
-  .six .hat {
-    /* Preserve the smaller mobile hat placement without overriding --hat-top. */
-    top: calc(var(--hat-top) + 150px);
-    left: calc(50% - 29px);
-    width: 50px;
-  }
 }
 
 @media screen and (max-height: 600px) {
