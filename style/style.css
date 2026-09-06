@@ -135,6 +135,8 @@ body {
 }
 
 .six {
+  /* Adjust this value to fine-tune the hat's vertical placement. */
+  --hat-top: -70px;
   position: relative;
 }
 
@@ -150,7 +152,7 @@ body {
 
 .six .hat {
   position: absolute;
-  top: -50px;
+  top: var(--hat-top);
   left: calc(50% - 45px);
   width: 80px;
 }
@@ -212,7 +214,8 @@ body {
   .container { padding-inline: 1rem; }
   .text-box .fake-btn { bottom: -38px; }
   .idea-5 span { display: block; }
-  .six .hat { top: -20px; left: calc(50% - 29px); width: 50px; }
+  .six { --hat-top: -30px; }
+  .six .hat { left: calc(50% - 29px); width: 50px; }
 }
 
 @media screen and (max-height: 600px) {
