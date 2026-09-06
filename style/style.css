@@ -135,7 +135,7 @@ body {
 }
 
 .six {
-  /* Adjust this value to fine-tune the hat's vertical placement. */
+  /* Lower this value to move the hat up on every screen size. */
   --hat-top: -180px;
   position: relative;
 }
@@ -214,8 +214,12 @@ body {
   .container { padding-inline: 1rem; }
   .text-box .fake-btn { bottom: -38px; }
   .idea-5 span { display: block; }
-  .six { --hat-top: -30px; }
-  .six .hat { left: calc(50% - 29px); width: 50px; }
+  .six .hat {
+    /* Preserve the smaller mobile hat placement without overriding --hat-top. */
+    top: calc(var(--hat-top) + 150px);
+    left: calc(50% - 29px);
+    width: 50px;
+  }
 }
 
 @media screen and (max-height: 600px) {
