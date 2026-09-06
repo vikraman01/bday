@@ -136,7 +136,7 @@ body {
 
 .six {
   /* Adjust this value to fine-tune the hat's vertical placement. */
-  --hat-top: -70px;
+  --hat-top: -140px;
   position: relative;
 }
 
