@@ -20,6 +20,8 @@ You can create your very own happy-birthday page in a few easy steps:
 
 I've created the JSON file (`customize.json`) for easy and quick customizability. It allows you the change all of the texts and the image used on the webpage without modifying the code. However, If you want to customize it further, leave the JSON fields empty and edit the HTML file directly. This is because the content in the JSON file overwrites the HTML.
 
+The photo's accessible description can be changed with `imageAlt`. The birthday hat stays anchored to the photo; its `--hat-top`, `--hat-left`, and `--hat-width` values in `style/style.css` are the only values normally needed to fine-tune its placement.
+
 Please note that I've created this page in a hurry and it comes with no warranty.
 
 Feel free to [get in touch with me](mailto:afiur.fahim@gmail.com) if you need any help with it. You can [find me on Twitter](https://twitter.com/faahim01) as well. :)

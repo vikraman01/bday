@@ -1,324 +1,131 @@
-// Import the data to customize and insert it into the page.
-const fetchData = () => {
-  fetch("customize.json")
+(() => {
+  "use strict";
+
+  const container = document.querySelector(".container");
+  const replayButton = document.getElementById("replay");
+  const customizableNodes = new Map(
+    Array.from(document.querySelectorAll("[data-node-name]")).map(node => [node.dataset.nodeName, node])
+  );
+  const altTextNodes = new Map(
+    Array.from(document.querySelectorAll("[data-alt-node-name]")).map(node => [node.dataset.altNodeName, node])
+  );
+
+  const applyCustomization = data => {
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
+      throw new TypeError("Customization data must be a JSON object.");
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (typeof value !== "string" || value.trim() === "") {
+        return;
+      }
+
+      const textNode = customizableNodes.get(key);
+      const altNode = altTextNodes.get(key);
+
+      if (key === "imagePath" && textNode instanceof HTMLImageElement) {
+        textNode.src = value;
+      } else if (textNode) {
+        textNode.textContent = value;
+      }
+
+      if (altNode instanceof HTMLImageElement) {
+        altNode.alt = value;
+      }
+    });
+
+    if (typeof data.greeting === "string" && data.greeting.trim()) {
+      document.title = data.greeting;
+    }
+  };
+
+  const wrapCharacters = element => {
+    if (!element || element.dataset.charactersWrapped === "true") {
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    Array.from(element.textContent).forEach(character => {
+      const characterSpan = document.createElement("span");
+      characterSpan.textContent = character;
+      fragment.appendChild(characterSpan);
+    });
+
+    element.replaceChildren(fragment);
+    element.dataset.charactersWrapped = "true";
+  };
+
+  const showStaticPage = () => {
+    container.style.visibility = "visible";
+  };
+
+  const createAnimation = () => {
+    if (!window.TimelineMax || !window.Expo || !window.Elastic) {
+      console.warn("The animation library did not load; showing the birthday message without animation.");
+      showStaticPage();
+      return;
+    }
+
+    wrapCharacters(document.querySelector(".hbd-chatbox"));
+    wrapCharacters(document.querySelector(".wish-hbd"));
+
+    const ideaTextEnter = { opacity: 0, y: -20, rotationX: 5, skewX: "15deg" };
+    const ideaTextExit = { opacity: 0, y: 20, rotationY: 5, skewX: "-15deg" };
+    const timeline = new TimelineMax();
+
+    timeline
+      .to(".container", 0.1, { visibility: "visible" })
+      .from(".one", 0.7, { opacity: 0, y: 10 })
+      .from(".two", 0.4, { opacity: 0, y: 10 })
+      .to(".one", 0.7, { opacity: 0, y: 10 }, "+=2.5")
+      .to(".two", 0.7, { opacity: 0, y: 10 }, "-=1")
+      .from(".three", 0.7, { opacity: 0, y: 10 })
+      .to(".three", 0.7, { opacity: 0, y: 10 }, "+=2")
+      .from(".four", 0.7, { scale: 0.2, opacity: 0 })
+      .from(".fake-btn", 0.3, { scale: 0.2, opacity: 0 })
+      .staggerTo(".hbd-chatbox span", 0.5, { visibility: "visible" }, 0.05)
+      .to(".fake-btn", 0.1, { backgroundColor: "rgb(127, 206, 248)" })
+      .to(".four", 0.5, { scale: 0.2, opacity: 0, y: -150 }, "+=0.7")
+      .from(".idea-1", 0.7, ideaTextEnter)
+      .to(".idea-1", 0.7, ideaTextExit, "+=1.5")
+      .from(".idea-2", 0.7, ideaTextEnter)
+      .to(".idea-2", 0.7, ideaTextExit, "+=1.5")
+      .from(".idea-3", 0.7, ideaTextEnter)
+      .to(".idea-3 strong", 0.5, { scale: 1.2, x: 10, backgroundColor: "rgb(21, 161, 237)", color: "#fff" })
+      .to(".idea-3", 0.7, ideaTextExit, "+=1.5")
+      .from(".idea-4", 0.7, ideaTextEnter)
+      .to(".idea-4", 0.7, ideaTextExit, "+=1.5")
+      .from(".idea-5", 0.7, { rotationX: 15, rotationZ: -10, skewY: "-5deg", y: 50, z: 10, opacity: 0 }, "+=0.5")
+      .to(".idea-5 .smiley", 0.7, { rotation: 90, x: 8 }, "+=0.4")
+      .to(".idea-5", 0.7, { scale: 0.2, opacity: 0 }, "+=2")
+      .staggerFrom(".idea-6 span", 0.8, { scale: 3, opacity: 0, rotation: 15, ease: Expo.easeOut }, 0.2)
+      .staggerTo(".idea-6 span", 0.8, { scale: 3, opacity: 0, rotation: -15, ease: Expo.easeOut }, 0.2, "+=1")
+      .staggerFromTo(".baloons img", 2.5, { opacity: 0.9, y: 1400 }, { opacity: 1, y: -1000 }, 0.2)
+      .from(".lydia-dp", 0.5, { scale: 3.5, opacity: 0, x: 25, y: -25, rotationZ: -45 }, "-=2")
+      .from(".hat", 0.5, { x: -100, y: 350, rotation: -180, opacity: 0 })
+      .staggerFrom(".wish-hbd span", 0.7, { opacity: 0, y: -50, rotation: 150, skewX: "30deg", ease: Elastic.easeOut.config(1, 0.5) }, 0.1)
+      .staggerFromTo(".wish-hbd span", 0.7, { scale: 1.4, rotationY: 150 }, { scale: 1, rotationY: 0, color: "#ff69b4", ease: Expo.easeOut }, 0.1, "party")
+      .from(".wish-text", 0.5, { opacity: 0, y: 10, skewX: "-15deg" }, "party")
+      .staggerFromTo(".eight svg", 1.5, { visibility: "visible", opacity: 0.8, scale: 0 }, { opacity: 0, scale: 80, repeat: 3, repeatDelay: 1.4 }, 0.3)
+      .to(".six", 0.5, { opacity: 0, y: 30, zIndex: "-1" })
+      .staggerFrom(".nine p, .nine button", 1, ideaTextEnter, 1.2)
+      .to(".last-smile", 0.5, { rotation: 90 }, "+=1");
+
+    replayButton.addEventListener("click", () => timeline.restart());
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      timeline.timeScale(2.5);
+    }
+  };
+
+  fetch(new URL("customize.json", window.location.href), { cache: "no-store" })
     .then(response => {
       if (!response.ok) {
         throw new Error(`Unable to load customization data: ${response.status}`);
       }
-
       return response.json();
     })
-    .then(data => {
-      Object.entries(data).forEach(([nodeName, value]) => {
-        if (value === "") {
-          return;
-        }
-
-        const node = Array.from(document.querySelectorAll("[data-node-name]")).find(
-          element => element.dataset.nodeName === nodeName
-        );
-        if (!node) {
-          return;
-        }
-
-        if (nodeName === "imagePath") {
-          node.setAttribute("src", value);
-        } else {
-          node.textContent = value;
-        }
-      });
-    })
-    .catch(error => {
-      console.warn("Using the page's default birthday message.", error);
-    })
-    .then(animationTimeline);
-};
-
-const wrapCharacters = element => {
-  const characters = Array.from(element.textContent);
-  const fragment = document.createDocumentFragment();
-
-  characters.forEach(character => {
-    const characterSpan = document.createElement("span");
-    characterSpan.textContent = character;
-    fragment.appendChild(characterSpan);
-  });
-
-  element.replaceChildren(fragment);
-};
-
-// Animation Timeline
-const animationTimeline = () => {
-  // Spit chars that needs to be animated individually
-  const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
-  const hbd = document.getElementsByClassName("wish-hbd")[0];
-
-  wrapCharacters(textBoxChars);
-  wrapCharacters(hbd);
-
-  const ideaTextTrans = {
-    opacity: 0,
-    y: -20,
-    rotationX: 5,
-    skewX: "15deg"
-  };
-
-  const ideaTextTransLeave = {
-    opacity: 0,
-    y: 20,
-    rotationY: 5,
-    skewX: "-15deg"
-  };
-
-  const tl = new TimelineMax();
-
-  tl
-    .to(".container", 0.1, {
-      visibility: "visible"
-    })
-    .from(".one", 0.7, {
-      opacity: 0,
-      y: 10
-    })
-    .from(".two", 0.4, {
-      opacity: 0,
-      y: 10
-    })
-    .to(
-      ".one",
-      0.7,
-      {
-        opacity: 0,
-        y: 10
-      },
-      "+=2.5"
-    )
-    .to(
-      ".two",
-      0.7,
-      {
-        opacity: 0,
-        y: 10
-      },
-      "-=1"
-    )
-    .from(".three", 0.7, {
-      opacity: 0,
-      y: 10
-      // scale: 0.7
-    })
-    .to(
-      ".three",
-      0.7,
-      {
-        opacity: 0,
-        y: 10
-      },
-      "+=2"
-    )
-    .from(".four", 0.7, {
-      scale: 0.2,
-      opacity: 0
-    })
-    .from(".fake-btn", 0.3, {
-      scale: 0.2,
-      opacity: 0
-    })
-    .staggerTo(
-      ".hbd-chatbox span",
-      0.5,
-      {
-        visibility: "visible"
-      },
-      0.05
-    )
-    .to(".fake-btn", 0.1, {
-      backgroundColor: "rgb(127, 206, 248)"
-    })
-    .to(
-      ".four",
-      0.5,
-      {
-        scale: 0.2,
-        opacity: 0,
-        y: -150
-      },
-      "+=0.7"
-    )
-    .from(".idea-1", 0.7, ideaTextTrans)
-    .to(".idea-1", 0.7, ideaTextTransLeave, "+=1.5")
-    .from(".idea-2", 0.7, ideaTextTrans)
-    .to(".idea-2", 0.7, ideaTextTransLeave, "+=1.5")
-    .from(".idea-3", 0.7, ideaTextTrans)
-    .to(".idea-3 strong", 0.5, {
-      scale: 1.2,
-      x: 10,
-      backgroundColor: "rgb(21, 161, 237)",
-      color: "#fff"
-    })
-    .to(".idea-3", 0.7, ideaTextTransLeave, "+=1.5")
-    .from(".idea-4", 0.7, ideaTextTrans)
-    .to(".idea-4", 0.7, ideaTextTransLeave, "+=1.5")
-    .from(
-      ".idea-5",
-      0.7,
-      {
-        rotationX: 15,
-        rotationZ: -10,
-        skewY: "-5deg",
-        y: 50,
-        z: 10,
-        opacity: 0
-      },
-      "+=0.5"
-    )
-    .to(
-      ".idea-5 .smiley",
-      0.7,
-      {
-        rotation: 90,
-        x: 8
-      },
-      "+=0.4"
-    )
-    .to(
-      ".idea-5",
-      0.7,
-      {
-        scale: 0.2,
-        opacity: 0
-      },
-      "+=2"
-    )
-    .staggerFrom(
-      ".idea-6 span",
-      0.8,
-      {
-        scale: 3,
-        opacity: 0,
-        rotation: 15,
-        ease: Expo.easeOut
-      },
-      0.2
-    )
-    .staggerTo(
-      ".idea-6 span",
-      0.8,
-      {
-        scale: 3,
-        opacity: 0,
-        rotation: -15,
-        ease: Expo.easeOut
-      },
-      0.2,
-      "+=1"
-    )
-    .staggerFromTo(
-      ".baloons img",
-      2.5,
-      {
-        opacity: 0.9,
-        y: 1400
-      },
-      {
-        opacity: 1,
-        y: -1000
-      },
-      0.2
-    )
-    .from(
-      ".lydia-dp",
-      0.5,
-      {
-        scale: 3.5,
-        opacity: 0,
-        x: 25,
-        y: -25,
-        rotationZ: -45
-      },
-      "-=2"
-    )
-    .from(".hat", 0.5, {
-      x: -100,
-      y: 350,
-      rotation: -180,
-      opacity: 0
-    })
-    .staggerFrom(
-      ".wish-hbd span",
-      0.7,
-      {
-        opacity: 0,
-        y: -50,
-        // scale: 0.3,
-        rotation: 150,
-        skewX: "30deg",
-        ease: Elastic.easeOut.config(1, 0.5)
-      },
-      0.1
-    )
-    .staggerFromTo(
-      ".wish-hbd span",
-      0.7,
-      {
-        scale: 1.4,
-        rotationY: 150
-      },
-      {
-        scale: 1,
-        rotationY: 0,
-        color: "#ff69b4",
-        ease: Expo.easeOut
-      },
-      0.1,
-      "party"
-    )
-    .from(
-      ".wish h5",
-      0.5,
-      {
-        opacity: 0,
-        y: 10,
-        skewX: "-15deg"
-      },
-      "party"
-    )
-    .staggerTo(
-      ".eight svg",
-      1.5,
-      {
-        visibility: "visible",
-        opacity: 0,
-        scale: 80,
-        repeat: 3,
-        repeatDelay: 1.4
-      },
-      0.3
-    )
-    .to(".six", 0.5, {
-      opacity: 0,
-      y: 30,
-      zIndex: "-1"
-    })
-    .staggerFrom(".nine p", 1, ideaTextTrans, 1.2)
-    .to(
-      ".last-smile",
-      0.5,
-      {
-        rotation: 90
-      },
-      "+=1"
-    );
-
-  // tl.seek("currentStep");
-  // tl.timeScale(2);
-
-  // Restart Animation on click
-  const replyBtn = document.getElementById("replay");
-  replyBtn.addEventListener("click", () => {
-    tl.restart();
-  });
-};
-
-// Run fetch and animation in sequence
-fetchData();
+    .then(applyCustomization)
+    .catch(error => console.warn("Using the page's default birthday message.", error))
+    .then(createAnimation);
+})();
